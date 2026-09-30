@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>菲律宾旅行手册</title>
+<style>
+body{margin:0;background:#FBF6EC;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.loader{text-align:center}
+.loader h1{font-family:'New York',Georgia,serif;font-size:1.6rem;color:#0B3D53;margin:0 0 8px}
+.loader p{color:#6B7B8A;font-size:.85rem;margin:0 0 20px}
+.loader .dots{display:flex;gap:6px;justify-content:center}
+.loader .dots span{width:8px;height:8px;border-radius:50%;background:#E85D4E;animation:bounce .6s infinite alternate}
+.loader .dots span:nth-child(2){background:#E8A33C;animation-delay:.2s}
+.loader .dots span:nth-child(3){background:#52B788;animation-delay:.4s}
+@keyframes bounce{to{opacity:.3;transform:translateY(-6px)}}
+</style>
+</head>
+<body>
+<div class="loader">
+<h1>菲律宾旅行手册</h1>
+<p>正在加载...</p>
+<div class="dots"><span></span><span></span><span></span></div>
+</div>
+<script>setTimeout(function(){location.replace("overview.html")},800)</script>
+</body>
+</html>

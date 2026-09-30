@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>菲律宾 · Alice 口袋版</title>
+<style>
+/* ===== Tropical Editorial Design Tokens ===== */
+:root{
+  --sand:#FBF6EC;--cream:#F3E9D6;--paper:#FFFCF5;
+  --ocean:#0B3D53;--ocean-deep:#062935;--coral:#E85D4E;--coral-soft:#FF8A75;
+  --amber:#E8A33C;--sun:#F7C948;--palm:#2D6A4F;--palm-light:#52B788;
+  --sky:#4A90A4;--lavender:#7B6B9E;--rose:#C44569;
+  --text:#1A2B3C;--muted:#6B7B8A;--hairline:rgba(11,61,83,.1);
+  --day1:#E85D4E;--day2:#F4845F;--day3:#F7C948;--day4:#52B788;--day5:#4A90A4;--day6:#5B7DBA;--day7:#9B6BA8;--day8:#C44569;--day9:#0B3D53;
+  --shadow-xs:0 1px 3px rgba(232,93,78,.05);
+  --shadow-sm:0 2px 6px rgba(11,61,83,.06),0 4px 14px rgba(232,93,78,.04);
+  --shadow-md:0 4px 12px rgba(11,61,83,.08),0 8px 28px rgba(232,93,78,.06);
+  --shadow-lg:0 8px 24px rgba(11,61,83,.1),0 16px 48px rgba(232,93,78,.08);
+  --r-lg:24px;--r-md:18px;--r-sm:14px;--r-xs:10px;
+  --serif:'New York','Iowan Old Style','Georgia','Songti SC',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue',sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --sand:#0D1B2A;--cream:#13242F;--paper:#162636;
+    --ocean:#7DD3C0;--ocean-deep:#0B3D53;--coral:#FF7A6B;--coral-soft:#FF8A75;
+    --text:#E8E0D0;--muted:#8A9BAD;--hairline:rgba(125,211,192,.12);
+    --shadow-xs:0 1px 3px rgba(0,0,0,.2);
+    --shadow-sm:0 2px 6px rgba(0,0,0,.25),0 4px 14px rgba(0,0,0,.15);
+    --shadow-md:0 4px 12px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.2);
+    --shadow-lg:0 8px 24px rgba(0,0,0,.35),0 16px 48px rgba(0,0,0,.25);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:var(--sand);color:var(--text);font-family:var(--sans);line-height:1.5;overflow-x:hidden;position:relative}
+
+/* Grain texture overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+}
+
+/* Decorative gradient mesh on background */
+body::after{
+  content:'';position:fixed;top:-20%;right:-30%;width:80%;height:60%;
+  background:radial-gradient(circle,rgba(247,201,72,.06) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+.container{max-width:430px;margin:0 auto;padding:0 18px 48px;position:relative;z-index:1}
+
+/* ========== Hero ========== */
+.hero{position:relative;text-align:center;padding:40px 0 28px;overflow:visible}
+.hero::before{
+  content:'';position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  width:280px;height:280px;
+  background:radial-gradient(circle,rgba(232,93,78,.08) 0%,rgba(247,201,72,.05) 40%,transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.hero-palm{position:absolute;top:-8px;right:-30px;width:140px;height:140px;opacity:.12;pointer-events:none}
+.hero-palm-l{position:absolute;top:-8px;left:-40px;width:120px;height:120px;opacity:.1;pointer-events:none;transform:scaleX(-1)}
+.hero h1{font-family:var(--serif);font-size:2.4rem;font-weight:700;letter-spacing:-.02em;line-height:1.1;position:relative}
+.hero h1 .accent{color:var(--coral);font-style:italic}
+.hero .sub{color:var(--muted);font-size:.85rem;margin-top:8px;font-weight:400;letter-spacing:.04em;text-transform:uppercase}
+.hero .route-line{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font-size:.78rem;color:var(--muted);font-weight:500}
+.hero .route-line .dot{width:5px;height:5px;border-radius:50%;background:var(--coral)}
+.hero .route-line .arrow{color:var(--coral);font-weight:600}
+
+/* ========== Wave Divider ========== */
+.wave{display:block;width:100%;height:24px;margin:0 auto;max-width:430px}
+
+/* ========== Countdown Card ========== */
+.countdown-card{
+  background:linear-gradient(145deg,var(--ocean) 0%,var(--ocean-deep) 100%);
+  border-radius:var(--r-lg);padding:28px 24px;margin-bottom:24px;
+  box-shadow:var(--shadow-md);position:relative;overflow:hidden;
+}
+.countdown-card::before{
+  content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;
+  background:radial-gradient(circle,rgba(247,201,72,.15) 0%,transparent 70%);border-radius:50%;
+}
+.countdown-card::after{
+  content:'';position:absolute;bottom:-30px;left:-20px;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(232,93,78,.12) 0%,transparent 70%);border-radius:50%;
+}
+.cc-label{font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:.12em;text-transform:uppercase;font-weight:600;position:relative}
+.cc-event{font-size:1.08rem;font-weight:600;margin:8px 0 20px;letter-spacing:-.01em;color:#fff;position:relative}
+.cc-timer{display:flex;gap:8px;position:relative}
+.cc-unit{
+  flex:1;text-align:center;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 4px 10px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.cc-num{font-size:2rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em;color:#fff;font-family:var(--serif)}
+.cc-name{font-size:.58rem;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.1em;font-weight:600;text-transform:uppercase}
+.cc-tz{font-size:.68rem;color:rgba(255,255,255,.4);margin-top:16px;text-align:center;font-weight:500;position:relative}
+
+/* ========== Section Titles ========== */
+.section-title{
+  font-family:var(--serif);font-size:1.35rem;font-weight:700;margin:36px 0 16px;
+  letter-spacing:-.01em;color:var(--text);display:flex;align-items:center;gap:10px;
+}
+.section-title::before{
+  content:"";width:6px;height:24px;
+  background:linear-gradient(180deg,var(--coral),var(--amber));
+  border-radius:3px;flex-shrink:0;
+}
+.section-title .st-sub{font-family:var(--sans);font-size:.7rem;color:var(--muted);font-weight:400;letter-spacing:.06em;text-transform:uppercase;margin-left:auto}
+
+/* ========== Person Nav ========== */
+.person-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.person-nav a{
+  display:flex;align-items:center;gap:10px;padding:14px 16px;
+  border-radius:var(--r-sm);text-decoration:none;color:var(--text);
+  font-size:.88rem;font-weight:600;background:var(--paper);
+  box-shadow:var(--shadow-sm);transition:transform .15s,box-shadow .15s;
+  border:1px solid var(--hairline);
+}
+.person-nav a:active{transform:scale(.97)}
+.person-nav .pn-icon{
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.pn-sh{background:linear-gradient(135deg,var(--palm-light),var(--palm))}
+.pn-cq{background:linear-gradient(135deg,var(--amber),var(--coral))}
+.pn-wj{background:linear-gradient(135deg,var(--rose),var(--coral))}
+.pn-tj{background:linear-gradient(135deg,var(--lavender),var(--sky))}
+.person-nav .pn-name{display:flex;flex-direction:column}
+.person-nav .pn-name small{font-size:.68rem;color:var(--muted);font-weight:400;margin-top:1px}
+
+/* ========== Risk Alert ========== */
+.risk{
+  background:linear-gradient(135deg,rgba(232,93,78,.05),rgba(247,201,72,.04));
+  border:1px solid rgba(232,93,78,.15);border-radius:var(--r-md);
+  padding:18px;margin-bottom:14px;position:relative;overflow:hidden;
+}
+.risk::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--coral)}
+.risk h4{color:var(--coral);margin-bottom:10px;font-size:.92rem;font-weight:700;letter-spacing:-.01em;font-family:var(--serif)}
+.risk-body{font-size:.82rem;line-height:1.7;color:var(--text)}
+.risk-body b{color:var(--ocean)}
+
+/* ========== Route Map ========== */
+.map-wrap{
+  background:var(--paper);border-radius:var(--r-md);padding:20px;
+  box-shadow:var(--shadow-sm);margin-bottom:12px;border:1px solid var(--hairline);
+  position:relative;overflow:hidden;
+}
+.map-wrap::before{
+  content:'';position:absolute;top:-20px;left:-20px;width:100px;height:100px;
+  background:radial-gradient(circle,rgba(82,183,136,.06) 0%,transparent 70%);border-radius:50%;
+}
+.map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:.74rem;color:var(--muted)}
+.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+/* ========== Booking Cards ========== */
+.booking{
+  background:var(--paper);border-radius:var(--r-sm);padding:16px;margin-bottom:12px;
+  box-shadow:var(--shadow-sm);border:1px solid var(--hairline);
+  position:relative;overflow:hidden;
+}
+.booking-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.booking-tag{
+  font-size:.62rem;padding:4px 10px;border-radius:20px;color:#fff;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
+.booking-tag.flight{background:var(--ocean)}
+.booking-tag.hotel{background:var(--palm)}
+.booking-tag.transport{background:var(--amber)}
+.booking-tag.ticket{background:var(--lavender)}
+.booking-title{font-weight:700;font-size:.98rem;letter-spacing:-.01em;font-family:var(--serif)}
+.booking-row{display:flex;font-size:.84rem;margin:5px 0;gap:8px;align-items:flex-start}
+.booking-row .k{color:var(--muted);min-width:48px;flex-shrink:0;font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;padding-top:2px}
+.booking-row .v{flex:1;color:var(--text);line-height:1.5}
+.booking-row a{color:var(--coral);text-decoration:none;font-weight:600}
+.booking-row a:active{opacity:.6}
+.people-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:.66rem;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:.02em}
+.chip.sh{background:rgba(82,183,136,.12);color:var(--palm)}
+.chip.cq{background:rgba(232,93,78,.12);color:var(--coral)}
+.chip.wj{background:rgba(196,69,105,.12);color:var(--rose)}
+.chip.tj{background:rgba(123,107,158,.12);color:var(--lavender)}
+
+/* ========== Day Cards ========== */
+.day-card{
+  background:var(--paper);border-radius:var(--r-md);margin-bottom:14px;
+  box-shadow:var(--shadow-sm);overflow:hidden;border:1px solid var(--hairline);
+  position:relative;
+}
+.day-card::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:var(--day-color,var(--coral))}
+.day-head{padding:16px 18px 16px 22px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background .15s}
+.day-head:active{background:rgba(232,93,78,.03)}
+.day-head .day-num{font-weight:700;font-size:1.05rem;letter-spacing:-.01em;font-family:var(--serif);color:var(--day-color,var(--text))}
+.day-head .day-date{font-size:.78rem;color:var(--muted);margin-top:2px}
+.day-head .day-route-btn{font-size:.68rem;padding:5px 12px;background:rgba(11,61,83,.06);border:0;border-radius:20px;color:var(--text);font-weight:600;letter-spacing:.04em}
+.day-body{padding:0 18px 16px 22px;display:none}
+.day-body.open{display:block}
+.day-body .mini-map{margin:0 -22px 14px;padding:12px 22px;background:rgba(11,61,83,.03);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+.timeline-item{display:flex;gap:14px;margin:12px 0;position:relative}
+.timeline-item::before{content:'';position:absolute;left:55px;top:24px;bottom:-12px;width:1px;background:var(--hairline)}
+.timeline-item:last-child::before{display:none}
+.tl-time{min-width:52px;font-size:.8rem;font-weight:700;padding-top:2px;color:var(--day-color,var(--coral));font-variant-numeric:tabular-nums;font-family:var(--serif)}
+.tl-content{flex:1;font-size:.9rem}
+.tl-content .place{font-weight:600;letter-spacing:-.01em}
+.tl-content .detail{color:var(--muted);font-size:.8rem;margin-top:3px;line-height:1.5}
+.tl-content .warn{color:var(--coral);font-size:.78rem;margin-top:3px;font-weight:500}
+.tl-content .book-now{display:inline-block;margin-top:3px;font-size:.64rem;padding:2px 8px;background:var(--coral);color:#fff;border-radius:20px;font-weight:700;letter-spacing:.04em}
+.tl-content a{color:var(--ocean);text-decoration:none;font-weight:600}
+
+/* ========== Todo List ========== */
+.todo-list{list-style:none}
+.todo-list li{
+  background:var(--paper);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:8px;
+  font-size:.86rem;box-shadow:var(--shadow-sm);border:1px solid var(--hairline);
+  font-weight:500;display:flex;align-items:center;gap:8px;
+}
+.todo-list li.urgent{background:linear-gradient(135deg,rgba(232,93,78,.06),rgba(247,201,72,.03));border-color:rgba(232,93,78,.15)}
+.todo-list li.urgent::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--coral);flex-shrink:0}
+.todo-list li:not(.urgent)::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--palm-light);flex-shrink:0;opacity:.4}
+
+/* ========== Tips ========== */
+.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tip-card{
+  background:var(--paper);border-radius:var(--r-sm);padding:14px;font-size:.8rem;
+  box-shadow:var(--shadow-sm);border:1px solid var(--hairline);line-height:1.5;position:relative;overflow:hidden;
+}
+.tip-card .tip-title{font-weight:700;margin-bottom:6px;font-size:.82rem;letter-spacing:-.01em;font-family:var(--serif)}
+.tip-card:nth-child(odd){border-top:3px solid var(--coral)}
+.tip-card:nth-child(even){border-top:3px solid var(--palm)}
+
+/* ========== Footer ========== */
+footer{text-align:center;color:var(--muted);font-size:.72rem;padding:28px 0;font-weight:500;letter-spacing:.04em}
+
+/* ========== Animations ========== */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.countdown-card{animation:fadeInUp .6s ease-out}
+.hero h1{animation:fadeInUp .5s ease-out}
+.section-title{animation:fadeInUp .4s ease-out}
+.booking{animation:fadeInUp .35s ease-out}
+.day-card{animation:fadeInUp .35s ease-out}
+</style>
+</head>
+<body>
+
+<!-- Decorative palm fronds -->
+<svg class="hero-palm" viewBox="0 0 200 200" fill="none" style="position:fixed;top:0;right:0;width:180px;height:180px;opacity:.08;pointer-events:none;z-index:0">
+  <path d="M100,100 Q100,40 90,10 M100,100 Q70,50 50,30 M100,100 Q130,50 150,30 M100,100 Q50,70 30,80 M100,100 Q150,70 170,80 M100,100 Q60,90 40,110 M100,100 Q140,90 160,110 M100,100 Q80,120 70,150 M100,100 Q120,120 130,150" stroke="#0B3D53" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+<svg class="hero-palm-l" viewBox="0 0 200 200" fill="none" style="position:fixed;bottom:10%;left:0;width:140px;height:140px;opacity:.06;pointer-events:none;z-index:0">
+  <path d="M100,200 Q100,140 90,110 M100,200 Q70,150 50,130 M100,200 Q130,150 150,130 M100,200 Q50,170 30,180 M100,200 Q150,170 170,180" stroke="#2D6A4F" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+
+<div class="container">
+
+<!-- ========== Hero ========== -->
+<div class="hero">
+  <h1>Alice <span class="accent">口袋版</span></h1>
+  <div class="sub">Shanghai → Philippines</div>
+</div>
+
+<!-- Wave divider -->
+<svg class="wave" viewBox="0 0 430 24" preserveAspectRatio="none">
+  <path d="M0,12 Q107.5,0 215,12 T430,12" fill="none" stroke="rgba(232,93,78,.08)" stroke-width="1"/>
+  <path d="M0,16 Q107.5,6 215,16 T430,16" fill="none" stroke="rgba(247,201,72,.06)" stroke-width="1"/>
+</svg>
+
+<!-- ========== Person Nav ========== -->
+<div class="section-title">其他成员 <span class="st-sub">Pocket Guide</span></div>
+<div class="person-nav">
+  <a href="overview.html"><div class="pn-icon pn-sh">总</div><div class="pn-name">全员总览<small>Overview</small></div></a>
+  <a href="boluo.html"><div class="pn-icon pn-sh">菠</div><div class="pn-name">菠萝<small>上海出发</small></div></a>
+  <a href="wangjie.html"><div class="pn-icon pn-cq">王</div><div class="pn-name">王姐<small>重庆出发</small></div></a>
+  <a href="tangjie.html"><div class="pn-icon pn-tj">唐</div><div class="pn-name">唐姐<small>重庆出发</small></div></a>
+</div>
+
+<!-- ========== Countdown ========== -->
+<div class="countdown-card">
+  <div class="cc-label">此刻关注</div>
+  <div class="cc-event" id="cc-event">加载中…</div>
+  <div class="cc-timer">
+    <div class="cc-unit"><div class="cc-num" id="d">--</div><div class="cc-name">天</div></div>
+    <div class="cc-unit"><div class="cc-num" id="h">--</div><div class="cc-name">时</div></div>
+    <div class="cc-unit"><div class="cc-num" id="m">--</div><div class="cc-name">分</div></div>
+    <div class="cc-unit"><div class="cc-num" id="s">--</div><div class="cc-name">秒</div></div>
+  </div>
+  <div class="cc-tz">所有时间均为菲律宾标准时间 (UTC+8) · 与中国无时差</div>
+</div>
+
+<!-- ========== Risk Alert ========== -->
+<div class="risk">
+  <h4>⚠️ 你需要特别注意</h4>
+  <div class="risk-body">
+    • <b>马尼拉 T1→T3 转航站楼</b>：9/30 晚 19:40 到 T1，23:20 从 T3 飞宿务，仅 3h40m，入境+提行李+转航站楼掐点，无延误余地<br>
+    • 建议：下机快步过海关，打车（约₱200）比摆渡车快
+  </div>
+</div>
+
+<!-- ========== Route Map ========== -->
+<div class="section-title">你的行程路线 <span class="st-sub">Route Map</span></div>
+<div class="map-wrap">
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+  <defs></defs>
+  <rect width="400" height="300" fill="transparent"/>
+  <path d="M160,40 Q180,35 200,45 Q220,50 230,70 Q225,90 210,100 Q190,105 175,95 Q155,85 150,65 Z" fill="rgba(11,61,83,.04)" stroke="var(--ocean)" stroke-width="1.5" opacity=".5"/>
+  <path d="M240,130 Q255,125 260,145 Q262,165 255,185 Q250,200 245,195 Q238,175 238,155 Q238,140 240,130 Z" fill="rgba(11,61,83,.04)" stroke="var(--ocean)" stroke-width="1.5" opacity=".5"/>
+  <path d="M275,170 Q295,165 305,180 Q310,200 300,215 Q285,220 272,205 Q268,190 270,178 Z" fill="rgba(11,61,83,.04)" stroke="var(--ocean)" stroke-width="1.5" opacity=".5"/>
+  <path d="M210,75 Q225,100 248,130" stroke="var(--palm-light)" stroke-width="2.5" fill="none" stroke-dasharray="4,2" stroke-linecap="round"/>
+  <path d="M248,160 Q240,200 235,240" stroke="var(--coral)" stroke-width="2.5" fill="none" stroke-dasharray="4,2" stroke-linecap="round"/>
+  <path d="M235,240 Q255,215 280,195" stroke="var(--sky)" stroke-width="2.5" fill="none" stroke-dasharray="4,2" stroke-linecap="round"/>
+  <path d="M285,198 Q260,130 220,80" stroke="var(--rose)" stroke-width="2.5" fill="none" stroke-dasharray="4,2" stroke-linecap="round"/>
+  <g style="cursor:pointer" onclick="openMap('Manila,Philippines')"><circle cx="210" cy="75" r="7" fill="var(--coral)" stroke="#fff" stroke-width="2"/><text x="220" y="78" font-size="11" font-weight="700" fill="var(--text)">马尼拉</text></g>
+  <g style="cursor:pointer" onclick="openMap('Cebu City,Philippines')"><circle cx="248" cy="160" r="7" fill="var(--palm)" stroke="#fff" stroke-width="2"/><text x="258" y="163" font-size="11" font-weight="700" fill="var(--text)">宿务</text></g>
+  <g style="cursor:pointer" onclick="openMap('Moalboal,Cebu,Philippines')"><circle cx="235" cy="240" r="7" fill="var(--amber)" stroke="#fff" stroke-width="2"/><text x="165" y="243" font-size="11" font-weight="700" fill="var(--text)">墨宝</text></g>
+  <g style="cursor:pointer" onclick="openMap('Panglao,Bohol,Philippines')"><circle cx="285" cy="198" r="8" fill="var(--sky)" stroke="#fff" stroke-width="2"/><text x="295" y="201" font-size="11" font-weight="700" fill="var(--text)">薄荷岛·邦劳</text></g>
+</svg>
+</div>
+
+<!-- ========== Your Flights ========== -->
+<div class="section-title">你的机票 <span class="st-sub">Flights</span></div>
+<div class="booking">
+  <div class="booking-head"><span class="booking-tag flight">去程</span><span class="booking-title">上海 → 马尼拉 → 宿务</span></div>
+  <div class="booking-row"><span class="k">9/30</span><span class="v"><b>16:00</b> 浦东T2 → <b>19:40</b> 马尼拉T1<br>PR337 · 菲航 · 3h40m · 有餐</span></div>
+  <div class="booking-row"><span class="k">转机</span><span class="v">T1→T3 · 入境+提行李+转航站楼 · ⚠️ 约 2h20m</span></div>
+  <div class="booking-row"><span class="k">9/30</span><span class="v"><b>23:20</b> 马尼拉T3 → <b>00:55</b> 宿务T1<br>5J583 · 宿务航空 · 1h35m</span></div>
+</div>
+<div class="booking">
+  <div class="booking-head"><span class="booking-tag flight">返程</span><span class="booking-title">宿务 → 马尼拉 → 上海</span></div>
+  <div class="booking-row"><span class="k">10/8</span><span class="v"><b>07:55</b> 宿务T1 → <b>09:15</b> 马尼拉T2<br>Z2764 · 亚航飞龙 · 1h20m</span></div>
+  <div class="booking-row"><span class="k">转机</span><span class="v">T2→T3 · 换航站楼 · 约 3h</span></div>
+  <div class="booking-row"><span class="k">10/8</span><span class="v"><b>13:15</b> 马尼拉T3 → <b>16:45</b> 浦东T2<br>HO1552 · 吉祥航空 · 3h30m</span></div>
+</div>
+
+<!-- ========== Hotels ========== -->
+<div class="section-title">你住的酒店 <span class="st-sub">Hotels</span></div>
+<div class="booking">
+  <div class="booking-head"><span class="booking-tag hotel">9/30</span><span class="booking-title">Appleton Boutique Hotel Cebu</span></div>
+  <div class="booking-row"><span class="k">到店</span><span class="v">10/1 凌晨 1 点左右 · 打车从机场约 20min</span></div>
+  <div class="booking-row"><span class="k">地址</span><span class="v"><a href="https://www.google.com/maps/search/?api=1&query=Appleton+Boutique+Hotel+Cebu">点击导航</a></span></div>
+  <div class="booking-row"><span class="k">同住</span><span class="v">菠萝</span></div>
+</div>
+<div class="booking">
+  <div class="booking-head"><span class="booking-tag hotel">10/1</span><span class="booking-title">Vailtin Home Point · 墨宝</span></div>
+  <div class="booking-row"><span class="k">到店</span><span class="v">下午抵达 · 宿务包车去墨宝约 3.5h</span></div>
+  <div class="booking-row"><span class="k">地址</span><span class="v">Basdiot, Moalboal · <a href="https://www.google.com/maps/search/?api=1&query=Vailtin+Home+Point+Moalboal">导航</a></span></div>
+  <div class="booking-row"><span class="k">电话</span><span class="v">+63-9178312337</span></div>
+</div>
+<div class="booking">
+  <div class="booking-head"><span class="booking-tag hotel">10/2-10/7</span><span class="booking-title">Bohol Begonia Resort · 薄荷岛</span></div>
+  <div class="booking-row"><span class="k">入住</span><span class="v">10/2 下午 · 墨宝→薄荷岛包车+船联票约 4h</span></div>
+  <div class="booking-row"><span class="k">地址</span><span class="v">Purok 7, Lag-itan, Panglao · <a href="https://www.google.com/maps/search/?api=1&query=Bohol+Begonia+Resort+Panglao">导航</a></span></div>
+</div>
+<div class="booking">
+  <div class="booking-head"><span class="booking-tag hotel">10/7</span><span class="booking-title">bai Hotel · 宿务 Mandaue（五星）</span></div>
+  <div class="booking-row"><span class="k">到店</span><span class="v">10/7 周三 15:00 后 · 退房 10/8 周四 11:00 前</span></div>
+  <div class="booking-row"><span class="k">地址</span><span class="v">Ouano Ave, Mandaue, Cebu 6014 · <a href="https://www.google.com/maps/search/?api=1&query=bai+Hotel+Ouano+Ave+Mandaue+Cebu">导航</a></span></div>
+  <div class="booking-row"><span class="k">电话</span><span class="v">+63 323 558 888</span></div>
+  <div class="booking-row"><span class="k">订单号</span><span class="v">2049677409</span></div>
+  <div class="booking-row"><span class="k">同住</span><span class="v">菠萝</span></div>
+</div>
+
+<!-- ========== Day by Day ========== -->
+<div class="section-title">你的逐日行程 <span class="st-sub">Day by Day</span></div>
+
+<!-- Day 1 -->
+<div class="day-card" style="--day-color:var(--day1)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 1 · 9/30</div><div class="day-date">出发</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body open">
+    <div class="timeline-item"><div class="tl-time">13:30</div><div class="tl-content"><span class="place">到浦东机场 T2</span><div class="detail">提前 2.5h · 国际段建议更早</div></div></div>
+    <div class="timeline-item"><div class="tl-time">16:00</div><div class="tl-content"><span class="place">PR337 起飞 → 马尼拉</span></div></div>
+    <div class="timeline-item"><div class="tl-time">19:40</div><div class="tl-content"><span class="place">到达马尼拉 T1</span><div class="warn">⚠️ 快步过海关！</div></div></div>
+    <div class="timeline-item"><div class="tl-time">20:30</div><div class="tl-content"><span class="place">打车 T1 → T3</span><div class="detail">约 ₱200 · 比摆渡车快</div></div></div>
+    <div class="timeline-item"><div class="tl-time">23:20</div><div class="tl-content"><span class="place">5J583 飞宿务</span></div></div>
+  </div>
+</div>
+
+<!-- Day 2 -->
+<div class="day-card" style="--day-color:var(--day2)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 2 · 10/1</div><div class="day-date">宿务 → 墨宝</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">00:55</div><div class="tl-content"><span class="place">到达宿务 T1</span><div class="detail">打车去 Appleton Hotel · 约 20min</div></div></div>
+    <div class="timeline-item"><div class="tl-time">下午</div><div class="tl-content"><span class="place">宿务包车去墨宝</span><div class="detail">3.5h · <a class="book-now">需预订</a></div></div></div>
+    <div class="timeline-item"><div class="tl-time">傍晚</div><div class="tl-content"><span class="place">墨宝 Vailtin Home Point 入住</span></div></div>
+    <div class="timeline-item"><div class="tl-time">可选</div><div class="tl-content"><span class="place">沙丁鱼风暴夜潜</span></div></div>
+  </div>
+</div>
+
+<!-- Day 3 -->
+<div class="day-card" style="--day-color:var(--day3)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 3 · 10/2</div><div class="day-date">墨宝 → 薄荷岛</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">上午</div><div class="tl-content"><span class="place">墨宝沙丁鱼风暴 + 海龟浮潜</span><div class="detail">早 7-8 点人最少</div></div></div>
+    <div class="timeline-item"><div class="tl-time">下午</div><div class="tl-content"><span class="place">包车+船联票 → 邦劳</span><div class="detail">约 4h · <a class="book-now">需预订</a></div></div></div>
+    <div class="timeline-item"><div class="tl-time">15:00</div><div class="tl-content"><span class="place">Bohol Begonia Resort 入住</span></div></div>
+  </div>
+</div>
+
+<!-- Day 4 -->
+<div class="day-card" style="--day-color:var(--day4)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 4 · 10/3</div><div class="day-date">环岛包车</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">全天</div><div class="tl-content"><span class="place">包车环岛</span><div class="detail">巴克拉扬大教堂 → 眼镜猴 → 巧克力山 → 吊桥</div></div></div>
+  </div>
+</div>
+
+<!-- Day 5 -->
+<div class="day-card" style="--day-color:var(--day5)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 5 · 10/4</div><div class="day-date">跳岛 / 自由</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">全天</div><div class="tl-content"><span class="place">可选跳岛游</span><div class="detail">处女岛 + 巴里卡萨 + 水晶岛</div></div></div>
+  </div>
+</div>
+
+<!-- Day 6 -->
+<div class="day-card" style="--day-color:var(--day6)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 6 · 10/5</div><div class="day-date">自由活动</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">可选</div><div class="tl-content"><span class="place">二刷跳岛 / 酒店躺 / 阿罗娜海滩</span></div></div>
+  </div>
+</div>
+
+<!-- Day 7 -->
+<div class="day-card" style="--day-color:var(--day7)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 7 · 10/6 周二</div><div class="day-date">Begonia 最后一天</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">⚠️</div><div class="tl-content"><span class="place">巧克力山周二闭馆</span><div class="detail">今天不要安排巧克力山</div></div></div>
+    <div class="timeline-item"><div class="tl-time">全天</div><div class="tl-content"><span class="place">酒店躺 / 阿罗娜海滩 / 二刷跳岛</span></div></div>
+  </div>
+</div>
+
+<!-- Day 8 -->
+<div class="day-card" style="--day-color:var(--day8)">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 8 · 10/7 周三</div><div class="day-date">退房 · 去宿务</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">12:00</div><div class="tl-content"><span class="place">Bohol Begonia 退房</span></div></div>
+    <div class="timeline-item"><div class="tl-time">下午</div><div class="tl-content"><span class="place">邦劳→宿务 Mandaue</span><div class="detail">包船+车约 3h · 去 bai Hotel 入住（15:00 后）</div></div></div>
+    <div class="timeline-item"><div class="tl-time">20:55</div><div class="tl-content"><span class="place">王姐 Z2778 飞走 · 22:00 唐姐 Z2772 飞走</span></div></div>
+    <div class="timeline-item"><div class="tl-time">晚</div><div class="tl-content"><span class="place">bai Hotel 入住（宿务机场附近）</span><div class="detail">方便 10/8 早班机</div></div></div>
+  </div>
+</div>
+
+<!-- Day 9 -->
+<div class="day-card" style="--day-color:var(--day9);border-width:2px">
+  <div class="day-head" onclick="toggleDay(this)"><div><div class="day-num">Day 9 · 10/8 周四</div><div class="day-date">回家</div></div><div class="day-route-btn">▾</div></div>
+  <div class="day-body">
+    <div class="timeline-item"><div class="tl-time">05:30</div><div class="tl-content"><span class="place">bai Hotel 退房 · 打车去宿务机场</span><div class="detail">Mandaue 到机场约 30min</div></div></div>
+    <div class="timeline-item"><div class="tl-time">07:55</div><div class="tl-content"><span class="place">Z2764 宿务→马尼拉</span></div></div>
+    <div class="timeline-item"><div class="tl-time">09:15</div><div class="tl-content"><span class="place">到达马尼拉 T2 · 换 T3</span></div></div>
+    <div class="timeline-item"><div class="tl-time">13:15</div><div class="tl-content"><span class="place">HO1552 飞上海</span></div></div>
+    <div class="timeline-item"><div class="tl-time">16:45</div><div class="tl-content"><span class="place">到达浦东 T2 · 🎉</span></div></div>
+  </div>
+</div>
+
+<!-- ========== Todo List ========== -->
+<div class="section-title">你需要做的 <span class="st-sub">To-Do</span></div>
+<ul class="todo-list">
+  <li class="urgent">预订 宿务→墨宝 包车（10/1 用）</li>
+  <li class="urgent">预订 墨宝→薄荷岛 船+车联票（10/2 用）</li>
+  <li>换 菲律宾比索现金（机场 ATM 可换）</li>
+  <li>办 eTravel 电子签</li>
+  <li>下 Google Maps 离线地图</li>
+</ul>
+
+<footer>Alice 专属页 · UTC+8 · 终稿</footer>
+
+</div>
+
+<script>
+const events=[
+  {t:"2026-09-30T13:30:00+08:00",n:"到浦东机场 T2（提前 2.5h）"},
+  {t:"2026-09-30T16:00:00+08:00",n:"PR337 起飞 → 马尼拉"},
+  {t:"2026-09-30T19:40:00+08:00",n:"到达马尼拉 T1"},
+  {t:"2026-09-30T23:20:00+08:00",n:"5J583 马尼拉→宿务"},
+  {t:"2026-10-01T00:55:00+08:00",n:"到达宿务"},
+  {t:"2026-10-08T05:30:00+08:00",n:"bai Hotel 退房去机场"},
+  {t:"2026-10-08T13:15:00+08:00",n:"HO1552 马尼拉→上海"},
+  {t:"2026-10-08T16:45:00+08:00",n:"到达浦东 🎉"}
+];
+function updateCountdown(){
+  const now=Date.now();let next=null;
+  for(const e of events){const t=new Date(e.t).getTime();if(t>now){next={...e,time:t};break;}}
+  if(!next){document.getElementById("cc-event").textContent="旅行已结束 🌙";return;}
+  document.getElementById("cc-event").textContent=next.n+"（"+fmtDate(next.t)+"）";
+  const d=Math.floor((next.time-now)/86400000);
+  const h=Math.floor((next.time-now)%86400000/3600000);
+  const m=Math.floor((next.time-now)%3600000/60000);
+  const s=Math.floor((next.time-now)%60000/1000);
+  document.getElementById("d").textContent=d;document.getElementById("h").textContent=pad(h);
+  document.getElementById("m").textContent=pad(m);document.getElementById("s").textContent=pad(s);
+}
+function pad(n){return n<10?"0"+n:n}
+function fmtDate(iso){const d=new Date(iso);return (d.getMonth()+1)+"/"+d.getDate()+" "+pad(d.getHours())+":"+pad(d.getMinutes());}
+setInterval(updateCountdown,1000);updateCountdown();
+function toggleDay(el){el.nextElementSibling.classList.toggle("open")}
+function openMap(q){window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q),"_blank")}
+</script>
+</body>
+</html>
